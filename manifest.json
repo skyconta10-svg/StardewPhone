@@ -1,0 +1,10 @@
+{
+  "Name": "StardewPhone",
+  "Author": "Você",
+  "Version": "1.0.0",
+  "Description": "Adiciona um celular ao Stardew Valley com chat, Pix, calculadora, lembretes e clima.",
+  "UniqueID": "SeuNome.StardewPhone",
+  "EntryDll": "StardewPhone.dll",
+  "MinimumApiVersion": "3.18.0",
+  "UpdateKeys": []
+}
