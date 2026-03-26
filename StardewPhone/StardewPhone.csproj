@@ -1,41 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Alvo: .NET 6 (compatível com Stardew Valley 1.5.6+) -->
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>StardewPhone</AssemblyName>
     <RootNamespace>StardewPhone</RootNamespace>
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
-    <!-- Gera um único DLL sem dependências extras -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <!--
-    Referências ao SMAPI e ao Stardew Valley.
-    Substitua os caminhos pelo local real do jogo no seu PC/servidor de compilação.
-    O GitHub Actions vai configurar isso automaticamente.
-  -->
+  <!-- Referências via NuGet (funciona no GitHub Actions) -->
   <ItemGroup>
-    <Reference Include="StardewModdingAPI">
-      <HintPath>$(GamePath)/StardewModdingAPI.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="StardewValley">
-      <HintPath>$(GamePath)/Stardew Valley.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="MonoGame.Framework">
-      <HintPath>$(GamePath)/MonoGame.Framework.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="xTile">
-      <HintPath>$(GamePath)/xTile.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.1.1">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
-  <!-- Inclui os assets na build -->
+  <!-- Assets -->
   <ItemGroup>
     <Content Include="assets/**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
