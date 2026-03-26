@@ -1,0 +1,58 @@
+name: Compilar StardewPhone
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Permite compilar manualmente pelo botão no GitHub
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Baixa o código do repositório
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Instala o .NET 6 (mesmo que o Stardew usa)
+      - name: Instalar .NET 6
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'
+
+      # 3. Baixa os DLLs do Stardew Valley via NuGet (stubs públicos para compilação)
+      #    O pacote "Pathoschild.Stardew.ModBuildConfig" fornece os DLLs necessários
+      - name: Adicionar ModBuildConfig
+        run: |
+          cd StardewPhone
+          # Adiciona referência ao pacote de build do SMAPI
+          dotnet add package Pathoschild.Stardew.ModBuildConfig --version 4.1.1
+
+      # 4. Restaura dependências
+      - name: Restaurar pacotes
+        run: dotnet restore StardewPhone/StardewPhone.csproj
+
+      # 5. Compila o mod
+      - name: Compilar
+        run: dotnet build StardewPhone/StardewPhone.csproj --configuration Release --no-restore
+
+      # 6. Empacota tudo na pasta do mod
+      - name: Empacotar mod
+        run: |
+          mkdir -p output/StardewPhone
+          cp StardewPhone/bin/Release/net6.0/StardewPhone.dll output/StardewPhone/
+          cp StardewPhone/manifest.json output/StardewPhone/
+          cp -r StardewPhone/assets output/StardewPhone/ 2>/dev/null || echo "Pasta assets não encontrada — adicione os sprites depois."
+
+      # 7. Sobe o arquivo para download direto pelo GitHub
+      - name: Upload do mod compilado
+        uses: actions/upload-artifact@v4
+        with:
+          name: StardewPhone-mod
+          path: output/StardewPhone/
+          # Mantém o artefato por 30 dias
+          retention-days: 30
+
